@@ -1,0 +1,23 @@
+# This is a generated file. Not intended for manual editing.
+version: "3"
+services:
+  api:
+    build:
+      context: "/Users/thomashorn/Source/beikeon/backend"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app-1/bin/Debug/net8.0/backend.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "/Users/thomashorn/.nuget/packages"
+      NUGET_FALLBACK_PACKAGES: "/Users/thomashorn/.nuget/packages"
+    image: "backend:dev"
+    ports: []
+    volumes:
+    - "/Users/thomashorn/.nuget/packages:/root/.nuget/fallbackpackages"
+    - "/Users/thomashorn/Source/beikeon/backend:/app-1:rw"
+    - "/Users/thomashorn/Source/beikeon:/src:rw"
+    working_dir: "/app-1"

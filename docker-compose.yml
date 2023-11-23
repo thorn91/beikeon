@@ -1,0 +1,85 @@
+# This is my backend Docker file.  Please create a docker compose that works for it
+
+#FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+#WORKDIR /app
+#EXPOSE 80
+#EXPOSE 443
+#
+#FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+#WORKDIR /src
+#COPY ["api/api.csproj", "api/"]
+#RUN dotnet restore "api/api.csproj"
+#COPY . .
+#WORKDIR "/src/api"
+#RUN dotnet build "api.csproj" -c Release -o /app/build
+#
+#FROM build AS publish
+#RUN dotnet publish "api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+#
+#FROM base AS final
+#WORKDIR /app
+#COPY --from=publish /app/publish .
+#ENTRYPOINT ["dotnet", "api.dll"]
+
+# This is my launchSettings.json file.  Please create a docker compose that works for it
+#  {
+#    "$schema": "http://json.schemastore.org/launchsettings.json",
+#    "iisSettings": {
+#      "windowsAuthentication": false,
+#      "anonymousAuthentication": true,
+#      "iisExpress": {
+#        "applicationUrl": "http://localhost:21866",
+#        "sslPort": 44360
+#      }
+#    },
+#    "profiles": {
+#      "http": {
+#        "commandName": "Project",
+#        "dotnetRunMessages": true,
+#        "launchBrowser": true,
+#        "launchUrl": "swagger",
+#        "applicationUrl": "http://localhost:5008",
+#        "environmentVariables": {
+#          "ASPNETCORE_ENVIRONMENT": "Development"
+#        }
+#      },
+#      "IIS Express": {
+#        "commandName": "IISExpress",
+#        "launchBrowser": true,
+#        "launchUrl": "swagger",
+#        "environmentVariables": {
+#          "ASPNETCORE_ENVIRONMENT": "Development"
+#        }
+#      }
+#    }
+#  }
+
+
+version: "3"
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5008:80"
+      - "5009:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+#      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ./api:/app
+    depends_on:
+      - db
+        
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - ./db:/var/lib/postgresql/data
+
