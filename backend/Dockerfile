@@ -5,16 +5,17 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["api/api.csproj", "api/"]
-RUN dotnet restore "api/api.csproj"
+COPY ["./backend.csproj", "backend/"]
+RUN dotnet restore "backend/backend.csproj"
+
+WORKDIR "/src/backend"
 COPY . .
-WORKDIR "/src/api"
-RUN dotnet build "api.csproj" -c Release -o /app/build
+RUN dotnet build "backend.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "backend.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "api.dll"]
+ENTRYPOINT ["dotnet", "backend.dll"]
