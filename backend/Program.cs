@@ -1,6 +1,5 @@
 using api.config;
 using api.data;
-using api.domain.user;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -17,6 +16,7 @@ builder.Services.AddHealthChecks()
 builder.Services
     .AddDbContext<BeikeonDbContext>(options => {
         options.UseNpgsql(DatabaseConfig.GetConnString(builder));
+
         // options.UseInMemoryDatabase("User")
         // .ConfigureWarnings(wcb => wcb.Ignore(InMemoryEventId.TransactionIgnoredWarning));
     });
@@ -26,7 +26,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     Console.WriteLine("Development environment detected");
-    
+
     app.UseSwagger();
     app.UseSwaggerUI();
 
@@ -36,7 +36,7 @@ if (app.Environment.IsDevelopment()) {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<BeikeonDbContext>();
     var dbResult = context.Database.EnsureCreated();
-    
+
     Console.WriteLine($"Database created: {dbResult}");
 }
 

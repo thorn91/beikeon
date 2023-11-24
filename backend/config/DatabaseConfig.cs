@@ -7,21 +7,20 @@ public static class DatabaseConfig {
     private const string UseLocalDbEnvVarKey = "USE_LOCAL_DB";
 
     /// <summary>
-    /// Returns the database string to use for the application.
-    ///
-    /// If the USE_LOCAL_DB environment variable is set to true, the hardcoded Local connection string will be used,
-    /// otherwise it will be constructed from the Template connection string and environmental variables set
-    /// (probably from docker compose).  Last ditch, it will hail mary and try to use a default connection string.
+    ///     Returns the database string to use for the application.
+    ///     If the USE_LOCAL_DB environment variable is set to true, the hardcoded Local connection string will be used,
+    ///     otherwise it will be constructed from the Template connection string and environmental variables set
+    ///     (probably from docker compose).  Last ditch, it will hail mary and try to use a default connection string.
     /// </summary>
     /// <param name="builder"></param>
     /// <returns>database connection string</returns>
     /// <exception cref="ValidationException"></exception>
     public static string GetConnString(WebApplicationBuilder builder) {
-        if (Environment.GetEnvironmentVariable(UseLocalDbEnvVarKey) == "true") {
+        if (Environment.GetEnvironmentVariable(UseLocalDbEnvVarKey) == "true")
             return builder.Configuration.GetConnectionString("Local") ??
-                   throw new ValidationException("Local Database use indicated without Conn String set in appsettings.json");
-        }
-        
+                   throw new ValidationException(
+                       "Local Database use indicated without Conn String set in appsettings.json");
+
         var connStringTemplate =
             builder.Configuration.GetConnectionString("Template") ?? FallbackPgsqlConnStringTemplate;
 
