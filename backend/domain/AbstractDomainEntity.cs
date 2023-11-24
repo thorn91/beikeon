@@ -7,19 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.domain;
 
-internal interface IAbstractDomainEntity {
-    public bool Equals(object? other);
-
-    public int GetHashCode();
-}
-
 public abstract class AbstractDomainEntity {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; internal set; }
 
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime CreatedTime { get; internal set; }
+    public DateTime LastUpdateTime { get; set; }
 
     public override bool Equals(object? other) {
         if (other == null) return false;

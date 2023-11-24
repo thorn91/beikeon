@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "http": {
+    "http-localdb": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
@@ -19,6 +19,19 @@
       "applicationUrl": "http://localhost:5008",
       "environmentVariables": {
         "USE_LOCAL_DB": "true",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "hotReloadEnabled": true,
+      "commandLineArgs": "watch",
+      "applicationUrl": "http://localhost:5008",
+      "environmentVariables": {
+        "USE_LOCAL_DB": "false",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },

@@ -1,5 +1,17 @@
 # Backend
 
+## Security
+
+### JWT Generation
+
+We can Microsoft's JWT Management with the command. is similar to their `secrets-manager`
+which we will not be using.
+
+#### Creating JWTs - CLI
+
+- `dotnet user-jwts create` to generate JWTs
+- `dotnet user-jwts print {ID} --show-all` to print the JWTs for a user
+
 ## Running
 
 ### Dev
