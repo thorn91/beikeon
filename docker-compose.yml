@@ -28,14 +28,25 @@ services:
       - "5432:5432"
     env_file:
       - .env
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - POSTGRES_DB=postgres
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
       - backend-network
 
+  # This allows connecting to our database from outside the container.
+  # Note localhost being the host and not the docker service name.  It has
+  # a hard coded configuration here and in the app configuration file.
+  dev-db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=localhost
+  
 volumes: 
   db-data:

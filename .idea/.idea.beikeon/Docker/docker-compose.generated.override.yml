@@ -8,26 +8,16 @@ services:
       target: "base"
     command: []
     entrypoint:
-    - "/riderDebugger/linux-arm64/dotnet/dotnet"
-    - "/riderDebugger/JetBrains.Debugger.Worker.exe"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
+    - "dotnet"
+    - "/app-1/bin/Debug/net8.0/backend.dll"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
       NUGET_PACKAGES: "/Users/thomashorn/.nuget/packages"
       NUGET_FALLBACK_PACKAGES: "/Users/thomashorn/.nuget/packages"
-      RIDER_DEBUGGER_LOG_DIR: "/riderLogs"
-      RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
     image: "backend:dev"
-    ports:
-    - "127.0.0.1:57004:57100"
-    - "127.0.0.1:57204:57300"
+    ports: []
     volumes:
     - "/Users/thomashorn/.nuget/packages:/root/.nuget/fallbackpackages"
     - "/Users/thomashorn/Source/beikeon/backend:/app-1:rw"
     - "/Users/thomashorn/Source/beikeon:/src:rw"
-    - "/Users/thomashorn/.local/share/JetBrains/RiderRemoteDebugger/2023.2.3/LinuxArm64:/riderDebugger"
-    - "/Users/thomashorn/Applications/Rider.app/Contents/bin:/riderLogsConf"
-    - "/Users/thomashorn/Library/Logs/JetBrains/Rider2023.2/DebuggerWorker/JetBrains.Debugger.Worker.2023_11_23_20_45_21:/riderLogs:rw"
     working_dir: "/app-1"

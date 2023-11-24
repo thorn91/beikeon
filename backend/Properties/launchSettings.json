@@ -14,8 +14,11 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
+      "hotReloadEnabled": true,
+      "commandLineArgs": "watch",
       "applicationUrl": "http://localhost:5008",
       "environmentVariables": {
+        "USE_LOCAL_DB": "true",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
