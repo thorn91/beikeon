@@ -13,7 +13,7 @@ public abstract class AbstractDomainEntity {
     public long Id { get; internal set; }
 
     public DateTime CreatedTime { get; internal set; }
-    public DateTime LastUpdateTime { get; set; }
+    public DateTime LastUpdateTime { get; internal set; }
 
     public override bool Equals(object? other) {
         if (other == null) return false;
