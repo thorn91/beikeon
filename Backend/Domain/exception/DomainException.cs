@@ -13,3 +13,7 @@ public abstract class DomainException : Exception {
 public class NotFoundException<T> : DomainException {
     public NotFoundException(long id) : base($"Entity Not Found: {id} :: {typeof(T).Name}") { }
 }
+
+public class DuplicateException<T> : DomainException {
+    public DuplicateException(string identifyingInfo) : base($"Duplicate {typeof(T).Name} Found :: {identifyingInfo}") { }
+}

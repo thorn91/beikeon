@@ -6,6 +6,7 @@ using beikeon.data;
 using beikeon.domain.security;
 using beikeon.domain.user;
 using beikeon.web;
+using beikeon.web.middleware;
 using beikeon.web.security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
@@ -23,15 +24,30 @@ builder.Services.AddAuthentication().AddJwtBearer(o => {
     TokenGenerator.Initialize(jwtKey, int.Parse(expiryMins));
 
     o.Events = new JwtBearerEvents {
-        OnTokenValidated = async context => {
+        OnTokenValidated = context => {
             var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerEvents>>();
 
-            var userName = context.Principal?.Identity?.Name;
-            var userId = context.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var userEmail = context.Principal?.Identity?.Name;
+            var userIdStr = context.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            if (userName is null || userId is null) context.Fail($"Missing user information in token [{userId} {userName}]");
+            if (userEmail is null || userIdStr is null) {
+                context.Fail($"Missing user information in token [{userIdStr} {userEmail}]");
+                return Task.CompletedTask;
+            }
 
-            logger.LogInformation("User {UserName} [{UserId}] authenticated successfully via JWT", userName, userId);
+            var userId = long.Parse(userIdStr);
+
+            var userService = context.HttpContext.RequestServices.GetRequiredService<UserService>();
+            var securityContext = context.HttpContext.RequestServices.GetRequiredService<SecurityContext>();
+
+            securityContext.Initialize(() => userService.MustGetUserById(long.Parse(userIdStr)), userId, userEmail);
+
+            logger.LogInformation("User {UserName} [{UserId}] authenticated successfully via JWT", userEmail, userIdStr);
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context => {
+            context.Response.Cookies.Delete(AuthMiddleware.AuthCookieName);
+            return Task.CompletedTask;
         }
     };
 
@@ -94,6 +110,8 @@ if (app.Environment.IsDevelopment()) {
     Console.WriteLine($"Database created: {dbResult}");
 }
 
+app.UseMiddleware<AuthMiddleware>();
+
 app.UseHttpLogging();
 
 app.UseHttpsRedirection();
@@ -113,7 +131,7 @@ app.MapPost("/users", async (BeikeonDbContext context, User user) => {
     return user;
 }).RequireAuthorization();
 
-app.MapGroup("/login")
+app.MapGroup(AuthEndpointsExt.Prefix)
     .MapAuthEndpoints()
     .AllowAnonymous();
 

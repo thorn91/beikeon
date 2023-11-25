@@ -8,6 +8,7 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>beikeon</RootNamespace>
         <UserSecretsId>2c008803-f308-4448-8b40-ebe4a06677ee</UserSecretsId>
+        <AssemblyName>Backend</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,10 +29,6 @@
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="web\middleware\"/>
     </ItemGroup>
 
 </Project>
