@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace api.config;
+namespace beikeon.config;
 
 public static class DatabaseConfig {
     private const string FallbackPgsqlConnStringTemplate = "Host={0};Username={1};Database={2};Port={3};Password={4};";

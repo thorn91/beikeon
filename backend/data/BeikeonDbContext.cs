@@ -1,9 +1,9 @@
-using api.domain;
-using api.domain.user;
+using beikeon.domain;
+using beikeon.domain.user;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace api.data;
+namespace beikeon.data;
 
 public class BeikeonDbContext : DbContext {
     private static readonly Predicate<EntityEntry>

@@ -1,13 +1,53 @@
-using api.config;
-using api.data;
-using api.domain.user;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Text;
+using beikeon.config;
+using beikeon.data;
+using beikeon.domain.user;
+using beikeon.web.security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication().AddJwtBearer("Bearer");
+builder.Services.AddAuthentication().AddJwtBearer(o => {
+    var jwtConfig = builder.Configuration.GetSection("Authentication").GetSection("JWT");
+    var jwtKey = jwtConfig["Key"] ?? throw new ValidationException("JWT Key not found in config!");
+    var expiryMins = jwtConfig["ExpiryMins"] ?? throw new ValidationException("Expiry minutes not found in config!");
+
+    TokenGenerator.Initialize(jwtKey, int.Parse(expiryMins));
+
+    o.Events = new JwtBearerEvents {
+        OnTokenValidated = async context => {
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerEvents>>();
+
+            var userName = context.Principal?.Identity?.Name;
+            var userId = context.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userName is null || userId is null) context.Fail($"Missing user information in token [{userId} {userName}]");
+
+            logger.LogInformation("User {UserName} [{UserId}] authenticated successfully via JWT", userName, userId);
+        }
+    };
+
+    o.TokenValidationParameters = new TokenValidationParameters {
+        ValidateIssuer = false,
+        ValidIssuer = jwtConfig["ValidIssuer"],
+        ValidateAudience = false,
+        ValidAudience = jwtConfig["ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ValidateIssuerSigningKey = true
+        // ValidateLifetime = true,
+        // ClockSkew = TimeSpan.Zero,
+        // LifetimeValidator = (before, expires, token, parameters) => {
+        //     var tokenLifetimeMinutes = (expires - before)?.TotalMinutes;
+        //     return tokenLifetimeMinutes <= 10; // Maximum Token Lifespan
+        // }
+    };
+});
 
 builder.Services.AddHttpLogging(logging => {
     logging.LoggingFields = HttpLoggingFields.All;
