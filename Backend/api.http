@@ -5,13 +5,26 @@ Accept: application/json
 
 ###
 
-POST {{api_HostAddress}}/login
+POST {{api_HostAddress}}/users
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InN0cmluZyIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3MDA5NDg5MTMsImV4cCI6MTcwMDk0OTgxMywiaWF0IjoxNzAwOTQ4OTEzfQ.COG9ZSmbWoN2NQSSaN9y3qzCnm-fSkZ7OfUvDuFvwIM
 
 {
   "firstName": "string",
   "lastName": "string",
+  "email": "string",
+  "password": "string"
+}
+
+###
+
+POST {{api_HostAddress}}/auth/login
+Accept: application/json
+Content-Type: application/json
+Cookie: access_token=eyjhbgcioijiuzi1niisinr5cci6ikpxvcj9.eyj1bmlxdwvfbmftzsi6inn0cmluzyisim5hbwvpzci6ijeilcjuymyioje3mda5nduymjesimv4cci6mtcwmdk0njeymswiawf0ijoxnzawotq1mjixfq.wpjmlq0zrkxxrq8flnhp42omqa4mbfzto2vy1z5qplm
+
+{
   "email": "string",
   "password": "string"
 }

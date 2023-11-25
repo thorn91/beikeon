@@ -9,6 +9,7 @@ using beikeon.web;
 using beikeon.web.middleware;
 using beikeon.web.security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -16,12 +17,25 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISecurityContext, SecurityContext>();
+builder.Services.AddDbContext<BeikeonDbContext>(
+    options => { options.UseNpgsql(DatabaseConfig.GetConnString(builder)); });
+
+builder.Services.AddAuthorization(o => {
+    o.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
 builder.Services.AddAuthentication().AddJwtBearer(o => {
     var jwtConfig = builder.Configuration.GetSection("Authentication").GetSection("JWT");
-    var jwtKey = jwtConfig["Key"] ?? throw new ValidationException("JWT Key not found in config!");
+    var jwtKeyStr = jwtConfig["Key"] ?? throw new ValidationException("JWT Key not found in config!");
+    var jwtKey = Encoding.UTF8.GetBytes(jwtKeyStr);
     var expiryMins = jwtConfig["ExpiryMins"] ?? throw new ValidationException("Expiry minutes not found in config!");
 
-    TokenGenerator.Initialize(jwtKey, int.Parse(expiryMins));
+    TokenGenerator.Initialize(jwtKeyStr, int.Parse(expiryMins));
 
     o.Events = new JwtBearerEvents {
         OnTokenValidated = context => {
@@ -37,8 +51,8 @@ builder.Services.AddAuthentication().AddJwtBearer(o => {
 
             var userId = long.Parse(userIdStr);
 
-            var userService = context.HttpContext.RequestServices.GetRequiredService<UserService>();
-            var securityContext = context.HttpContext.RequestServices.GetRequiredService<SecurityContext>();
+            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+            var securityContext = context.HttpContext.RequestServices.GetRequiredService<ISecurityContext>();
 
             securityContext.Initialize(() => userService.MustGetUserById(long.Parse(userIdStr)), userId, userEmail);
 
@@ -53,10 +67,10 @@ builder.Services.AddAuthentication().AddJwtBearer(o => {
 
     o.TokenValidationParameters = new TokenValidationParameters {
         ValidateIssuer = false,
-        ValidIssuer = jwtConfig["ValidIssuer"],
+        // ValidIssuer = jwtConfig["ValidIssuer"],
         ValidateAudience = false,
-        ValidAudience = jwtConfig["ValidAudience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        // ValidAudience = jwtConfig["ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
         ValidateIssuerSigningKey = true
         // ValidateLifetime = true,
         // ClockSkew = TimeSpan.Zero,
@@ -83,17 +97,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy());
 
-builder.Services.AddDbContext<BeikeonDbContext>(
-    options => { options.UseNpgsql(DatabaseConfig.GetConnString(builder)); });
-
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ISecurityContext, SecurityContext>();
-
-// options.UseInMemoryDatabase("User")
-// .ConfigureWarnings(wcb => wcb.Ignore(InMemoryEventId.TransactionIgnoredWarning));
-
 var app = builder.Build();
+app.UseMiddleware<AuthMiddleware>();
 
 // Configure the HTTP request pipeline and create tables that do not exist
 if (app.Environment.IsDevelopment()) {
@@ -109,8 +114,6 @@ if (app.Environment.IsDevelopment()) {
     var dbResult = context.Database.EnsureCreated();
     Console.WriteLine($"Database created: {dbResult}");
 }
-
-app.UseMiddleware<AuthMiddleware>();
 
 app.UseHttpLogging();
 
@@ -129,7 +132,7 @@ app.MapPost("/users", async (BeikeonDbContext context, User user) => {
     await context.Users.AddAsync(user);
     await context.SaveChangesAsync();
     return user;
-}).RequireAuthorization();
+});
 
 app.MapGroup(AuthEndpointsExt.Prefix)
     .MapAuthEndpoints()
