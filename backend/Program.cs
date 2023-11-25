@@ -107,4 +107,7 @@ app.MapPost("/users", async (BeikeonDbContext context, User user) => {
     return user;
 });
 
+// Create the auth
+app.MapPost("/auth", async (BeikeonDbContext context, User user) => { Console.WriteLine("hello"); });
+
 app.Run();

@@ -4,3 +4,14 @@ GET {{api_HostAddress}}/health
 Accept: application/json
 
 ###
+
+POST {{api_HostAddress}}/auth
+Accept: application/json
+Content-Type: application/json
+
+{
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "password": "string"
+}

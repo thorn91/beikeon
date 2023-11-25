@@ -3,6 +3,9 @@ using beikeon.domain.user;
 
 namespace beikeon.web.security;
 
+/// <summary>
+///     The Security Context is a singleton that holds information about the current user.
+/// </summary>
 public class SecurityContext {
     private User? _actualUser;
     private bool _isInitialized;
@@ -21,13 +24,11 @@ public class SecurityContext {
     }
 
     private void ThrowIfNotSetup() {
-        if (!_isInitialized) {
-            throw new ValidationException("Security Context was not initialized!");
-        }
+        if (!_isInitialized) throw new ValidationException("Security Context was not initialized!");
     }
 
     /// <summary>
-    /// Initializes the Security Context with the given user information.
+    ///     Initializes the Security Context with the given user information.
     /// </summary>
     /// <param name="userGetter">A function that returns a user.  Separate so that it does not need injected services.</param>
     /// <param name="userId"></param>
