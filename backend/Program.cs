@@ -3,7 +3,9 @@ using System.Security.Claims;
 using System.Text;
 using beikeon.config;
 using beikeon.data;
+using beikeon.domain.security;
 using beikeon.domain.user;
+using beikeon.web;
 using beikeon.web.security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
@@ -68,6 +70,10 @@ builder.Services.AddHealthChecks()
 builder.Services.AddDbContext<BeikeonDbContext>(
     options => { options.UseNpgsql(DatabaseConfig.GetConnString(builder)); });
 
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ISecurityContext, SecurityContext>();
+
 // options.UseInMemoryDatabase("User")
 // .ConfigureWarnings(wcb => wcb.Ignore(InMemoryEventId.TransactionIgnoredWarning));
 
@@ -105,9 +111,10 @@ app.MapPost("/users", async (BeikeonDbContext context, User user) => {
     await context.Users.AddAsync(user);
     await context.SaveChangesAsync();
     return user;
-});
+}).RequireAuthorization();
 
-// Create the auth
-app.MapPost("/auth", async (BeikeonDbContext context, User user) => { Console.WriteLine("hello"); });
+app.MapGroup("/login")
+    .MapAuthEndpoints()
+    .AllowAnonymous();
 
 app.Run();

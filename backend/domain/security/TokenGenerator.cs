@@ -5,7 +5,7 @@ using System.Text;
 using beikeon.domain.user;
 using Microsoft.IdentityModel.Tokens;
 
-namespace beikeon.web.security;
+namespace beikeon.domain.security;
 
 public static class TokenGenerator {
     private static readonly int DefaultExpiryMins = 15;

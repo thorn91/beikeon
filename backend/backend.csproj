@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>api</RootNamespace>
+        <RootNamespace>beikeon</RootNamespace>
         <UserSecretsId>2c008803-f308-4448-8b40-ebe4a06677ee</UserSecretsId>
     </PropertyGroup>
 

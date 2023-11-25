@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-POST {{api_HostAddress}}/auth
+POST {{api_HostAddress}}/login
 Accept: application/json
 Content-Type: application/json
 

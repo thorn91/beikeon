@@ -6,7 +6,7 @@ namespace beikeon.web.security;
 /// <summary>
 ///     The Security Context is a singleton that holds information about the current user.
 /// </summary>
-public class SecurityContext {
+public class SecurityContext : ISecurityContext {
     private User? _actualUser;
     private bool _isInitialized;
 
@@ -23,10 +23,6 @@ public class SecurityContext {
         return _actualUser;
     }
 
-    private void ThrowIfNotSetup() {
-        if (!_isInitialized) throw new ValidationException("Security Context was not initialized!");
-    }
-
     /// <summary>
     ///     Initializes the Security Context with the given user information.
     /// </summary>
@@ -37,4 +33,18 @@ public class SecurityContext {
         _userGetter = new Lazy<Task<User>>(userGetter);
         _isInitialized = true;
     }
+
+    private void ThrowIfNotSetup() {
+        if (!_isInitialized) throw new ValidationException("Security Context was not initialized!");
+    }
+}
+
+public interface ISecurityContext {
+    Task<User> GetUser();
+
+    void Initialize(User user);
+
+    void Initialize(Func<Task<User>> userGetter, long userId, string userEmail);
+
+    private void ThrowIfNotSetup() { }
 }

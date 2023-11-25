@@ -17,7 +17,7 @@ public class BeikeonDbContext : DbContext {
 
     public BeikeonDbContext(DbContextOptions<BeikeonDbContext> options) : base(options) { }
 
-    public DbSet<User>? Users { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
 
     public override int SaveChanges() {
         /* Note that this will technically make the created times slightly off, but until we have a legal

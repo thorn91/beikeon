@@ -6,4 +6,8 @@ public class User(string firstName, string lastName, string email, string passwo
     public string? LastName { get; protected set; } = lastName;
     public string Email { get; protected set; } = email;
     public string? Password { get; protected set; } = password;
+
+    public bool IsValidatedPassword(string s) {
+        return s == Password;
+    }
 }
