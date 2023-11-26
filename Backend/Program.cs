@@ -53,9 +53,7 @@ if (app.Environment.IsDevelopment()) {
     var context = services.GetRequiredService<BeikeonDbContext>();
     var isDbCreated = context.Database.EnsureCreated();
 
-    if (isDbCreated) {
-        app.Logger.LogInformation("DB Setup for development!");
-    }
+    if (isDbCreated) app.Logger.LogInformation("DB Setup for development!");
 }
 
 app.UseHttpLogging();

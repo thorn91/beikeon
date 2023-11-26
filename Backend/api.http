@@ -5,14 +5,18 @@ Accept: application/json
 
 ### Auth
 
+# Login and set token
 POST {{api_HostAddress}}/auth/login
 Accept: application/json
 Content-Type: application/json
 
-// The token comes back as 'value' in the response body
 {
   "email": "string",
   "password": "string"
 }
 
-> {% client.global.set("auth_token", response.body.value) %}
+> {%
+    client.global.set("auth_token", response.body.value)
+%}
+
+### User

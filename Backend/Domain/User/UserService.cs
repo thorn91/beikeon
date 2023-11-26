@@ -33,7 +33,7 @@ public class UserService : IUserService {
     }
 
     public async Task<User> CreateNewUser(string email, string password, string firstName, string lastName) {
-        var user = new User(email: email, password: password, firstName: firstName, lastName: lastName);
+        var user = new User(email: email, rawPassword: password, firstName: firstName, lastName: lastName);
 
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
