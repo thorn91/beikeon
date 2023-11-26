@@ -30,8 +30,7 @@ builder.Services.AddHttpLogging(logging => {
     logging.CombineLogs = true;
 });
 
-/* Add services to the container.
- * Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle */
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -52,8 +51,11 @@ if (app.Environment.IsDevelopment()) {
 
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<BeikeonDbContext>();
-    var dbResult = context.Database.EnsureCreated();
-    Console.WriteLine($"Database created: {dbResult}");
+    var isDbCreated = context.Database.EnsureCreated();
+
+    if (isDbCreated) {
+        app.Logger.LogInformation("DB Setup for development!");
+    }
 }
 
 app.UseHttpLogging();
