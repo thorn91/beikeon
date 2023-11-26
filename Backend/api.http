@@ -8,7 +8,7 @@ Accept: application/json
 POST {{api_HostAddress}}/users
 Accept: application/json
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InN0cmluZyIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3MDA5NDg5MTMsImV4cCI6MTcwMDk0OTgxMywiaWF0IjoxNzAwOTQ4OTEzfQ.COG9ZSmbWoN2NQSSaN9y3qzCnm-fSkZ7OfUvDuFvwIM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InN0cmluZyIsIm5hbWVpZCI6IjEiLCJuYmYiOjE3MDEwMTc4MTIsImV4cCI6MTcwMTAxODcxMiwiaWF0IjoxNzAxMDE3ODEyfQ.-NWZSkZNYjdsLiEnZxwu-VsiHG4DbpyuZ3s0TJ7ObNE
 
 {
   "firstName": "string",
