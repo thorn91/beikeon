@@ -1,6 +1,7 @@
-using api.config;
-using api.data;
-using api.domain.user;
+using backend.api;
+using backend.config;
+using backend.data;
+using backend.domain.user;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -56,15 +57,20 @@ app.MapHealthChecks("/health");
 
 app.MapGet("/", () => "Hello, World!");
 
-app.MapGet("/users", async (BeikeonDbContext context) => {
-    var users = await context.Users.ToListAsync();
-    return users;
-});
+app.MapUserApi();
 
-app.MapPost("/users", async (BeikeonDbContext context, User user) => {
-    await context.Users.AddAsync(user);
-    await context.SaveChangesAsync();
-    return user;
-});
+// app.MapGet("/users", async (BeikeonDbContext context) => {
+//     var users = await context.Users.ToListAsync();
+//     return users;
+// });
+//
+// app.MapPost("/users", async (BeikeonDbContext context, User user) => {
+//     await context.Users.AddAsync(user);
+//     await context.SaveChangesAsync();
+//     return user;
+// });
+
+// Map everything from UserApi.cs which are minimal APis
+
 
 app.Run();

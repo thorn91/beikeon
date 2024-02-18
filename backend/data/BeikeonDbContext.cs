@@ -1,9 +1,9 @@
-using api.domain;
-using api.domain.user;
+using backend.domain;
+using backend.domain.user;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace api.data;
+namespace backend.data;
 
 public class BeikeonDbContext : DbContext {
     private static readonly Predicate<EntityEntry>
@@ -17,14 +17,12 @@ public class BeikeonDbContext : DbContext {
 
     public BeikeonDbContext(DbContextOptions<BeikeonDbContext> options) : base(options) { }
 
-    public DbSet<User>? Users { get; set; }
+    public required DbSet<User> Users { get; init; }
 
     public override int SaveChanges() {
-        /* Note that this will technically make the created times slightly off, but until we have a legal
-         * department that tells me not to, I'd rather not hammer that function call. */
-        var currentTime = DateTime.UtcNow;
         var entries = ChangeTracker.Entries();
         var entityEntries = entries as EntityEntry[] ?? entries.ToArray();
+        var currentTime = DateTime.UtcNow;
 
         SetLastUpdateTime(entityEntries, currentTime);
         SetCreatedTimeIfNeeded(entityEntries, currentTime);

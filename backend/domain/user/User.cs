@@ -1,4 +1,4 @@
-namespace api.domain.user;
+namespace backend.domain.user;
 
 public class User(string firstName, string lastName, string email, string password)
     : AbstractDomainEntity {
