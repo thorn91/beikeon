@@ -1,10 +1,10 @@
+using beikeon.api;
+using beikeon.api.middleware;
 using beikeon.config;
 using beikeon.data;
 using beikeon.domain.security;
+using beikeon.domain.Security;
 using beikeon.domain.user;
-using beikeon.web;
-using beikeon.web.middleware;
-using beikeon.web.security;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -51,6 +51,8 @@ if (app.Environment.IsDevelopment()) {
 
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<BeikeonDbContext>();
+    
+    context.Database.EnsureDeleted();
     var isDbCreated = context.Database.EnsureCreated();
 
     if (isDbCreated) app.Logger.LogInformation("DB Setup for development!");

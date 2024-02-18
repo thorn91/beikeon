@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using beikeon.data;
 
 #nullable disable
 
-namespace beikeon.Data.Migrations
+namespace beikeon.data.migrations
 {
     [DbContext(typeof(BeikeonDbContext))]
-    partial class BeikeonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240218155954_AddSalt")]
+    partial class AddSalt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

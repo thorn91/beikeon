@@ -1,4 +1,4 @@
-﻿namespace beikeon.web.middleware;
+﻿namespace beikeon.api.middleware;
 
 public class AuthMiddleware(RequestDelegate next) {
     public const string AuthCookieName = "access_token";

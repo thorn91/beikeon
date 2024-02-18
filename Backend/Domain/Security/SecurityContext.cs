@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using beikeon.domain.user;
 
-namespace beikeon.web.security;
+namespace beikeon.domain.Security;
 
 /// <summary>
 ///     The Security Context is a singleton that holds information about the current user.

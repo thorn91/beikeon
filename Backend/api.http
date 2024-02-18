@@ -3,20 +3,45 @@
 GET {{api_HostAddress}}/health
 Accept: application/json
 
-### Auth
+### Register
+# Register a new user
+POST {{api_HostAddress}}/auth/register
+Accept: application/json
+Content-Type: application/json
 
+{
+  "email": "string@string.string",
+  "password": "string",
+  "firstName": "string",
+  "lastName": "string"
+}
+
+> {%
+    client.global.set("auth_token", response.body.token);
+%}
+
+###
+
+### Login
 # Login and set token
 POST {{api_HostAddress}}/auth/login
 Accept: application/json
 Content-Type: application/json
 
 {
-  "email": "string",
+  "email": "string@string.string",
   "password": "string"
 }
 
 > {%
-    client.global.set("auth_token", response.body.value)
+    client.global.set("auth_token", response.body.token);
 %}
 
-### User
+
+### Users
+
+# Get all users
+GET {{api_HostAddress}}/users
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+###

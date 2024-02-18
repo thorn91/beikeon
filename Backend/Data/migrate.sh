@@ -11,5 +11,5 @@ cd "$(dirname "$0")" || exit
 cd .. || exit
 
 rm -rf ./Migrations 
-dotnet ef migrations add InitialCreate -o data/migrations
+dotnet ef migrations add AddSalt -o data/migrations
 cd "$CURRENT_DIR" || exit

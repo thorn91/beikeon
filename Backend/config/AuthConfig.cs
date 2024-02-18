@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
+using beikeon.api.middleware;
 using beikeon.domain.security;
+using beikeon.domain.Security;
 using beikeon.domain.user;
-using beikeon.web.middleware;
-using beikeon.web.security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
