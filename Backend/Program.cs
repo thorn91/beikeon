@@ -52,7 +52,7 @@ if (app.Environment.IsDevelopment()) {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<BeikeonDbContext>();
     
-    context.Database.EnsureDeleted();
+    // context.Database.EnsureDeleted();
     var isDbCreated = context.Database.EnsureCreated();
 
     if (isDbCreated) app.Logger.LogInformation("DB Setup for development!");
@@ -64,14 +64,14 @@ app.UseHttpsRedirection();
 
 app.MapHealthChecks("/health");
 
-app.MapGet("/", () => "Hello, World!");
+app.MapGet("/api/", () => "Hello, World!");
 
-app.MapGet("/users", async (BeikeonDbContext context) => {
+app.MapGet("/api/users", async (BeikeonDbContext context) => {
     var users = await context.Users.ToListAsync();
     return users;
 });
 
-app.MapPost("/users", async (BeikeonDbContext context, User user) => {
+app.MapPost("/api/users", async (BeikeonDbContext context, User user) => {
     await context.Users.AddAsync(user);
     await context.SaveChangesAsync();
     return user;

@@ -18,3 +18,5 @@
 !copyrights
 !misc.xml
 !sqldialects.xml
+# GitHub Copilot persisted chat sessions
+/copilot/chatSessions
